@@ -24,7 +24,20 @@ export const createUser = async (form: FormData) =>{
     redirect('/users')
 }
 
-export const getUser = async(id: number) => {
-    return db.prepare('SELECT * FROM users WHERE id = '+id)
-    .all() as IUser[]
+export const getUser = async(id: number):Promise<IUser|null> => {
+    return db.prepare('SELECT * FROM users WHERE id = ?').get(id) as IUser
+}
+
+export const editUser = async ( id: number, form: FormData) =>{
+    let name = form.get('name');
+    let age = form.get('age');
+    let salary = form.get('salary');
+
+    const stm = `UPDATE users 
+                SET name = ?, age = ?, salary = ? 
+                WHERE id = `+id;
+
+    db.prepare(stm).run(name, age, salary);
+
+    redirect('/users')
 }

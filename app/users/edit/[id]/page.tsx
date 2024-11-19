@@ -1,18 +1,22 @@
-import { getUser } from "@/app/_helpers/api"
+import { editUser, getUser } from "@/app/_helpers/api"
+import { redirect } from "next/navigation";
 
 interface IProps{
     params: {id:number}
 }
 export default async function Edit({params}:IProps){
     const user = await getUser(params.id)
-    console.log(user);
+    if (!user) {
+      redirect('/user')
+    }
+    
     return (
         <div className="flex justify-center items-center min-h-screen bg-gray-900">
           <div className="bg-gray-800 text-gray-200 p-8 rounded-lg shadow-lg w-full max-w-md">
             <h3 className="text-2xl font-semibold text-indigo-400 mb-6 text-center">
               Edit User
             </h3>
-            <form>
+            <form action={editUser.bind(null, params.id)}>
               <div>
                 <label
                   htmlFor="name"
@@ -25,7 +29,7 @@ export default async function Edit({params}:IProps){
                   name="name"
                   id="name"
                   placeholder="Enter name"
-                  value={user[0].name}
+                  defaultValue={user.name}
                   className="w-full bg-gray-700 text-gray-200 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm"
                 />
               </div>
@@ -41,7 +45,7 @@ export default async function Edit({params}:IProps){
                   name="age"
                   id="age"
                   placeholder="Enter age"
-                  value={user[0].age}
+                  defaultValue={user.age}
                   className="w-full bg-gray-700 text-gray-200 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm"
                 />
               </div>
@@ -57,7 +61,7 @@ export default async function Edit({params}:IProps){
                   name="salary"
                   id="salary"
                   placeholder="Enter salary"
-                  value={user[0].salary}
+                  defaultValue={user.salary}
                   className="w-full bg-gray-700 text-gray-200 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm"
                 />
               </div>
